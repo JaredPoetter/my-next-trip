@@ -13,6 +13,7 @@ import TransitRoutes from "./components/transit-routes";
 import Directions from "./components/directions";
 import Stops from "./components/stops";
 import Information from "./components/information";
+import NotFound from "./components/not-found";
 
 export default class App extends React.Component {
     constructor() {
@@ -113,56 +114,17 @@ export default class App extends React.Component {
                 <BrowserRouter>
                     <Routes>
                         <Route path='/' element={<TransitRoutes routes={this.state.routes} />}>
-                            {/* <TransitRoutes /> */}
                         </Route>
                         <Route path='/route/:routeId' element={<Directions />}>
-                            {/* <Directions /> */}
                         </Route>
                         <Route path='/route/:routeId/direction/:directionId' element={<Stops />}>
-                            {/* <Stops /> */}
                         </Route>
                         <Route path='/route/:routeId/direction/:directionId/stop/:stopId' element={<Information />}>
-                            {/* <Information /> */}
+                        </Route>
+                        <Route path='*' element={<NotFound />}>
                         </Route>
                     </Routes>
                 </BrowserRouter>
-
-                {/* <DropDownClass
-                    title='Select bus route:'
-                    defaultOption='Routes'
-                    optionArray={this.state.routes}
-                    labelKey='route_label'
-                    idKey='route_id'
-                    onSelect={this.onSelectRoute}
-                />
-                {this.state.directions.length > 0 ?
-                    <DropDownClass
-                        title='Select direction:'
-                        defaultOption='Direction'
-                        optionArray={this.state.directions}
-                        labelKey='direction_name'
-                        idKey='direction_id'
-                        onSelect={this.onSelectDirection}
-                    />
-                    : ''
-                }
-                {this.state.stops.length > 0 ?
-                    <DropDownClass
-                        title='Select stop:'
-                        defaultOption='Stops'
-                        optionArray={this.state.stops}
-                        labelKey='description'
-                        idKey='place_code'
-                        onSelect={this.onSelectStop}
-                    />
-                    : ''
-                }
-                {this.state.stopInformation && this.state.stopInformation.departures && this.state.stopInformation.departures.length > 0 ? 
-                    <DepatureList
-                        departureData={this.state.stopInformation}
-                    />
-                    : <h3>No departures at this time.</h3>
-                } */}
             </div>
         )
     }

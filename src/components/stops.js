@@ -6,12 +6,6 @@ export default function Stops() {
     const [stops, setStops] = React.useState([])
     const params = useParams();
     
-    // requestDirections(params.routeId).then((directions) => {
-    //     console.log('directions', directions)
-    //     // Storing the directions
-    //     setDirections(directions)
-    // });
-
     useEffect(() => {
         // Getting the stops for the selected route and direction
         requestStops(params.routeId, params.directionId)
@@ -26,6 +20,7 @@ export default function Stops() {
     return (
         <div>
             <h2>Stops</h2>
+            <h3>TODO ADDING THE ROUTE NAME AND DIRECTION HERE</h3>
             {stops.length > 0 ?
                 stops.map((stop, index) => {
                     return (<div key={`${stop.place_code}-${index}`}><Link to={`/route/${params.routeId}/direction/${params.directionId}/stop/${stop.place_code}`}>{stop.description}</Link><br/></div>)
