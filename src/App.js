@@ -1,19 +1,8 @@
 import logo from './logo.svg';
 import './App.css';
 
-// import 'api.js';
-import {
-    requestRoutes,
-    requestDirections,
-    requestStops,
-    requestStopInformation,
-} from './api';
-import DropDown from './components/dropdown';
-import Input from './components/input';
-import React, { useEffect, useState } from 'react';
-import DropDownClass from './components/dropdown-class';
-import DepatureList from './components/departure-list';
-import { BrowserRouter, Link, Route, Routes } from 'react-router-dom';
+import React from 'react';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import TransitRoutes from './components/transit-routes';
 import Directions from './components/directions';
 import Stops from './components/stops';
