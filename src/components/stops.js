@@ -11,55 +11,88 @@ export default function Stops() {
     const [transitRoute, setTransitRoute] = React.useState({});
     const [direction, setDirection] = React.useState({});
     const [stops, setStops] = React.useState([]);
+    const [badRequest, setBadRequest] = React.useState(false);
     const params = useParams();
 
     useEffect(() => {
-        // Getting the bus route information for better usability
-        requestRoutes().then((routes) => {
-            const selectedRoute = routes.filter((route) => {
-                return params.routeId === route.route_id;
-            });
-            setTransitRoute(selectedRoute[0]);
-        });
+        // Getting the bus route information
+        requestRoutes()
+            .then((routes) => {
+                const selectedRoute = routes.filter((route) => {
+                    return params.routeId === route.route_id;
+                });
 
-        //
-        requestDirections(params.routeId).then((directions) => {
-            // debugger
-            const directionIdNumber = parseInt(params.directionId, 10);
-
-            const selectedDirection = directions.filter((direction) => {
-                return directionIdNumber === direction.direction_id;
+                // Checking to make sure we found a hit
+                if (selectedRoute.length <= 0) {
+                    setBadRequest(true);
+                } else {
+                    setTransitRoute(selectedRoute[0]);
+                }
+            })
+            .catch((e) => {
+                setBadRequest(true);
+                console.error(e);
             });
-            setDirection(selectedDirection[0]);
-        });
+
+        // Getting the direction name
+        requestDirections(params.routeId)
+            .then((directions) => {
+                const directionIdNumber = parseInt(params.directionId, 10);
+
+                const selectedDirection = directions.filter((direction) => {
+                    return directionIdNumber === direction.direction_id;
+                });
+
+                // Checking to make sure we found a hit
+                if (selectedDirection.length <= 0) {
+                    setBadRequest(true);
+                } else {
+                    setDirection(selectedDirection[0]);
+                }
+            })
+            .catch((e) => {
+                setBadRequest(true);
+                console.error(e);
+            });
 
         // Getting the stops for the selected route and direction
-        requestStops(params.routeId, params.directionId).then((stops) => {
-            // debugger
-            console.log('stops', stops);
-            // Storing the stops
-            setStops(stops);
-        });
+        requestStops(params.routeId, params.directionId)
+            .then((stops) => {
+                // Storing the stops
+                setStops(stops);
+            })
+            .catch((e) => {
+                setBadRequest(true);
+                console.error(e);
+            });
     }, []);
 
     return (
         <div>
-            <h3>Route: {transitRoute.route_label}</h3>
-            <h3>Direction: {direction.direction_name}</h3>
-            <h2>Stops</h2>
-            {stops.length > 0 ? (
-                stops.map((stop, index) => {
-                    return (
-                        <div key={`${stop.place_code}-${index}`}>
-                            <Link to={`stop/${stop.place_code}`}>
-                                {stop.description}
-                            </Link>
-                            <br />
-                        </div>
-                    );
-                })
+            {badRequest ? (
+                <h2>Bad Request</h2>
             ) : (
-                <h3>No stops found for specified route and direction.</h3>
+                <div>
+                    <h3>Route: {transitRoute.route_label}</h3>
+                    <h3>Direction: {direction.direction_name}</h3>
+                    <h2>Stops</h2>
+                    {stops.length > 0 ? (
+                        stops.map((stop, index) => {
+                            return (
+                                <div key={`${stop.place_code}-${index}`}>
+                                    <Link to={`stop/${stop.place_code}`}>
+                                        {stop.description}
+                                    </Link>
+                                    <br />
+                                </div>
+                            );
+                        })
+                    ) : (
+                        <h3>
+                            No stops found for specified route and direction.
+                        </h3>
+                    )}
+                </div>
             )}
         </div>
     );

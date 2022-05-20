@@ -15,7 +15,7 @@ export default function App() {
             <h1>My NextTrip App</h1>
             <BrowserRouter>
                 <Routes>
-                    <Route path="/" element={<TransitRoutes />}></Route>
+                    <Route path="/" element={<TransitRoutes />} />
                     <Route
                         path="/route/:routeId"
                         element={<Directions />}
