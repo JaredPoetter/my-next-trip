@@ -1,4 +1,5 @@
 import React from 'react';
+import { Table } from 'reactstrap';
 import './departure-list.css';
 
 export default class DepatureList extends React.Component {
@@ -6,7 +7,7 @@ export default class DepatureList extends React.Component {
         // TODO: Expand the this.props to be variable names instead of 'this.props.' when using these values
 
         return (
-            <table>
+            <Table bordered>
                 <thead>
                     <tr>
                         <th>Route</th>
@@ -38,7 +39,7 @@ export default class DepatureList extends React.Component {
                         }
                     )}
                 </tbody>
-            </table>
+            </Table>
         );
     }
 }

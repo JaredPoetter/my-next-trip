@@ -3,7 +3,7 @@ Exercise
 ## Assumptions
 
 -   Pulling in RESTapi data when switching routes instead of storing in a cache was to enable a user to send or bookmark a link to a specific URL. If they would load in http://localhost:3000/route/901/direction/0/stop/MAAM they would be able to get the most up to date information about that stop in the future.
--
+-   using of reactstrap library to simplify styling of the web app so i could focus on the logic of the React.js code
 
 -   Testing my routes with good and bad data
 -   Did not create unit tests for REST api because it should be handled by the Metro Transit system
