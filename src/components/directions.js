@@ -30,8 +30,8 @@ export default function Directions() {
         // const params = useParams();
         return (
             <div>
-                <h2>Directions</h2>
                 <h3>Route: {transitRoute.route_label}</h3>
+                <h2>Directions</h2>
                 {directions.length > 0 ?
                     directions.map((direction, index) => {
                         return (<div key={`${direction.direction_id}-${index}`}><Link to={`direction/${direction.direction_id}`}>{direction.direction_name}</Link><br/></div>)

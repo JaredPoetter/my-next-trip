@@ -39,9 +39,9 @@ export default function Stops() {
     
     return (
         <div>
-            <h2>Stops</h2>
             <h3>Route: {transitRoute.route_label}</h3>
             <h3>Direction: {direction.direction_name}</h3>
+            <h2>Stops</h2>
             {stops.length > 0 ?
                 stops.map((stop, index) => {
                     return (<div key={`${stop.place_code}-${index}`}><Link to={`stop/${stop.place_code}`}>{stop.description}</Link><br/></div>)

@@ -41,13 +41,13 @@ export default function Information() {
 
     return (
         <div>
-            <h2>Information</h2>
             <h3>Route: {transitRoute.route_label}</h3>
             <h3>Direction: {direction.direction_name}</h3>
             {information && information.stops && information.stops.length > 0 ? 
                 <h3>Stop: {information.stops[0].description}</h3>
                 : ''
             }
+            <h2>Information</h2>
             {information && information.departures && information.departures.length > 0 ? 
                 <DepatureList
                     departureData={information}
