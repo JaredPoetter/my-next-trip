@@ -5,8 +5,12 @@ export default function Input() {
 
     return (
         <div>
-            <input type='text' value={message} onChange={(e) => setMessage(e.target.value)} />
+            <input
+                type="text"
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
+            />
             {message}
         </div>
-    )
+    );
 }

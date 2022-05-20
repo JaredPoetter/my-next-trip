@@ -3,8 +3,6 @@ import React from 'react';
 export default function DropDown() {
     // const []
 
-
-
     return (
         <select>
             <option>aaaaa</option>
@@ -13,5 +11,5 @@ export default function DropDown() {
             <option>ddddd</option>
             <option>eeeee</option>
         </select>
-    )
+    );
 }
