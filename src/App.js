@@ -8,6 +8,11 @@ import Input from "./components/input";
 import React, { useEffect, useState } from "react";
 import DropDownClass from "./components/dropdown-class";
 import DepatureList from "./components/departure-list";
+import { BrowserRouter, Link, Route, Routes } from 'react-router-dom';
+import TransitRoutes from "./components/transit-routes";
+import Directions from "./components/directions";
+import Stops from "./components/stops";
+import Information from "./components/information";
 
 export default class App extends React.Component {
     constructor() {
@@ -29,6 +34,12 @@ export default class App extends React.Component {
     }
 
     onSelectRoute = (routeId) => {
+        // window.location = routeId
+
+        // window.history.push(`${window.location.search}&route=${routeId}`)
+
+        // window.location.href += routeId;
+
         // Checking if there was a route, direction or stop already selected
         if (this.state.selectedRoute !== '') {
             // Clearing out the set of stops, selected direction, selected stop
@@ -55,6 +66,10 @@ export default class App extends React.Component {
     }
 
     onSelectDirection = async (directionId) => {
+        // window.location = directionId
+
+        // window.location.href += 
+
         // Storing the direction id
         this.setState({ selectedDirection: directionId })
 
@@ -95,7 +110,24 @@ export default class App extends React.Component {
         return (
             <div>
                 <h1>My NextTrip App</h1>
-                <DropDownClass
+                <BrowserRouter>
+                    <Routes>
+                        <Route path='/' element={<TransitRoutes routes={this.state.routes} />}>
+                            {/* <TransitRoutes /> */}
+                        </Route>
+                        <Route path='/route/:routeId' element={<Directions />}>
+                            {/* <Directions /> */}
+                        </Route>
+                        <Route path='/route/:routeId/direction/:directionId' element={<Stops />}>
+                            {/* <Stops /> */}
+                        </Route>
+                        <Route path='/route/:routeId/direction/:directionId/stop/:stopId' element={<Information />}>
+                            {/* <Information /> */}
+                        </Route>
+                    </Routes>
+                </BrowserRouter>
+
+                {/* <DropDownClass
                     title='Select bus route:'
                     defaultOption='Routes'
                     optionArray={this.state.routes}
@@ -130,7 +162,7 @@ export default class App extends React.Component {
                         departureData={this.state.stopInformation}
                     />
                     : <h3>No departures at this time.</h3>
-                }
+                } */}
             </div>
         )
     }
