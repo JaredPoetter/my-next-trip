@@ -8,30 +8,25 @@ import TransitRoutes from './components/transit-routes';
 import Directions from './components/directions';
 import Stops from './components/stops';
 import Information from './components/information';
-import NotFound from './components/not-found';
+import BadRequest from './components/bad-request';
 
 export default function App() {
     return (
         <div>
             <h1>My NextTrip App</h1>
-            <BrowserRouter>
-                <Routes>
-                    <Route path="/" element={<TransitRoutes />} />
-                    <Route
-                        path="/route/:routeId"
-                        element={<Directions />}
-                    ></Route>
-                    <Route
-                        path="/route/:routeId/direction/:directionId"
-                        element={<Stops />}
-                    ></Route>
-                    <Route
-                        path="/route/:routeId/direction/:directionId/stop/:stopId"
-                        element={<Information />}
-                    ></Route>
-                    <Route path="*" element={<NotFound />}></Route>
-                </Routes>
-            </BrowserRouter>
+            <Routes>
+                <Route path="/" element={<TransitRoutes />} />
+                <Route path="/route/:routeId" element={<Directions />} />
+                <Route
+                    path="/route/:routeId/direction/:directionId"
+                    element={<Stops />}
+                />
+                <Route
+                    path="/route/:routeId/direction/:directionId/stop/:stopId"
+                    element={<Information />}
+                />
+                <Route path="*" element={<BadRequest />}></Route>
+            </Routes>
         </div>
     );
 }

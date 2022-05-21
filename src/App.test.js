@@ -7,11 +7,17 @@ import {
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { createMemoryHistory } from 'history';
-import { Router } from 'react-router-dom';
+import { BrowserRouter, Router } from 'react-router-dom';
 import App from './App';
+import uuid from 'uuid';
+import crypto from 'crypto';
 
 test('renders learn react link', async () => {
-    render(<App />);
+    render(
+        <BrowserRouter>
+            <App />
+        </BrowserRouter>
+    );
 
     const input = screen.getByText('My NextTrip App');
 
@@ -28,9 +34,13 @@ test('renders learn react link', async () => {
     // expect(linkElement).toBeInTheDocument();
 });
 
-test('Full app rendering and navigating', async () => {
+test('Full app navigating', async () => {
     const history = createMemoryHistory();
-    render(<App />);
+    render(
+        <BrowserRouter>
+            <App />
+        </BrowserRouter>
+    );
     const user = userEvent.setup();
 
     // expect(screen.getByText(/My NextTrip App/i)).toBeInTheDocument();
@@ -96,6 +106,162 @@ test('Full app rendering and navigating', async () => {
         { timeout: 2000 }
     );
 });
+
+test('Accessing a bad page', () => {
+    const history = createMemoryHistory();
+    history.push('/a/junk/route');
+    render(
+        <Router location={history.location} navigator={history}>
+            <App />
+        </Router>
+    );
+
+    expect(screen.getByText(/Bad Request/i)).toBeInTheDocument();
+});
+
+test('Requesting a random route id', async () => {
+    const history = createMemoryHistory();
+    const randomId = crypto.randomBytes(20).toString('hex');
+    history.push(`/route/${randomId}`);
+    render(
+        <Router location={history.location} navigator={history}>
+            <App />
+        </Router>
+    );
+
+    // Waiting and checking for bad request
+    await waitFor(
+        () => {
+            expect(screen.getByText(/Bad Request/i)).toBeInTheDocument();
+        },
+        { timeout: 2000 }
+    );
+});
+
+test('Requesting a random direction id', async () => {
+    const history = createMemoryHistory();
+    const randomId = crypto.randomBytes(20).toString('hex');
+    history.push(`/route/901/direction/${randomId}`);
+    render(
+        <Router location={history.location} navigator={history}>
+            <App />
+        </Router>
+    );
+
+    // Waiting and checking for bad request
+    await waitFor(
+        () => {
+            expect(screen.getByText(/Bad Request/i)).toBeInTheDocument();
+        },
+        { timeout: 2000 }
+    );
+});
+
+test('Requesting a random stop id', async () => {
+    const history = createMemoryHistory();
+    const randomId = crypto.randomBytes(20).toString('hex');
+    history.push(`/route/901/direction/0/stop/${randomId}`);
+    render(
+        <Router location={history.location} navigator={history}>
+            <App />
+        </Router>
+    );
+
+    // Waiting and checking for bad request
+    await waitFor(
+        () => {
+            expect(screen.getByText(/Bad Request/i)).toBeInTheDocument();
+        },
+        { timeout: 2000 }
+    );
+});
+
+test('Requesting a good route id', async () => {
+    const history = createMemoryHistory();
+    history.push('/route/901');
+    render(
+        <Router location={history.location} navigator={history}>
+            <App />
+        </Router>
+    );
+
+    // Waiting and checking for directions
+    await waitFor(
+        () => {
+            expect(screen.getByText(/METRO Blue Line/i)).toBeInTheDocument();
+            expect(screen.getByText(/Directions/i)).toBeInTheDocument();
+            expect(screen.getByText(/Northbound/i)).toBeInTheDocument();
+            expect(screen.getByText(/Southbound/i)).toBeInTheDocument();
+        },
+        { timeout: 2000 }
+    );
+});
+
+test('Requesting a good direction id', async () => {
+    const history = createMemoryHistory();
+    history.push('/route/901/direction/1');
+    render(
+        <Router location={history.location} navigator={history}>
+            <App />
+        </Router>
+    );
+
+    // Waiting and checking for stops
+    await waitFor(
+        () => {
+            expect(screen.getByText(/METRO Blue Line/i)).toBeInTheDocument();
+            expect(screen.getByText(/Southbound/i)).toBeInTheDocument();
+            expect(screen.getByText(/Stops/i)).toBeInTheDocument();
+            expect(
+                screen.getByText(/Target Field Station Platform 2/i)
+            ).toBeInTheDocument();
+            expect(
+                screen.getByText(/Government Plaza Station/i)
+            ).toBeInTheDocument();
+        },
+        { timeout: 2000 }
+    );
+});
+
+test('Requesting a good stop id', async () => {
+    const history = createMemoryHistory();
+    history.push('/route/901/direction/1/stop/VAMC');
+    render(
+        <Router location={history.location} navigator={history}>
+            <App />
+        </Router>
+    );
+
+    // Waiting and checking for stop information
+    await waitFor(
+        () => {
+            expect(screen.getByText(/METRO Blue Line/i)).toBeInTheDocument();
+            expect(screen.getByText(/Southbound/i)).toBeInTheDocument();
+            expect(
+                screen.getByText(/VA Medical Center Station/i)
+            ).toBeInTheDocument();
+            expect(screen.getByText(/Information/i)).toBeInTheDocument();
+            expect(
+                screen.getAllByText(/to Mall of America/i).length
+            ).toBeGreaterThan(0);
+        },
+        { timeout: 2000 }
+    );
+});
+
+// TODO random number generator
+// requesting a random route id
+// requesting a random direction id
+// requesting a random stop id
+
+// requesting a good route id
+// requesting a good direction id
+// requesting a good stop id
+// checking for the table data
+
+// verifying the back and forward functionality
+
+//
 
 // Testing Notes
 // - https://testing-library.com/docs/example-react-router/
