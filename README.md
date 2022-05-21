@@ -17,10 +17,17 @@ Exercise
 
 `npm test`
 
--   Testing my routes with good and bad data
--   Did not create unit tests for REST api because it should be handled by the Metro Transit system
--   Scope of testing
--   UI/UX
+## Questions
+
+-   What made you pick this code?
+-   Why did you choose this framework?
+-   How did your solution for this problem evolve over time?
+-   What was the biggest challenge related to solving this problem?
+
+*   Testing my routes with good and bad data
+*   Did not create unit tests for REST api because it should be handled by the Metro Transit system
+*   Scope of testing
+*   UI/UX
 
 # Getting Started with Create React App
 

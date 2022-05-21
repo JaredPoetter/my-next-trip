@@ -1,104 +1,167 @@
-import axios from 'axios';
-
 const baseRoute = 'https://svc.metrotransit.org/nextripv2/';
 
-function requestRoutes() {
-    return axios.get(`${baseRoute}routes`).then((response) => {
-        // Error handling
-        if (response === null || response.data === null) {
-            throw 'No data received from api.';
+const requestRoutes = async () => {
+    try {
+        const response = await fetch(`${baseRoute}routes`);
+
+        if (response.ok) {
+            return response.json();
+        } else {
+            throw new Error('No data received from api.');
         }
-
-        if (response.status !== 200) {
-            throw 'Problem with https://svc.metrotransit.org/nextripv2/routes';
-        }
-
-        return response.data;
-    });
-}
-
-function requestDirections(route) {
-    // Checking to make sure the route is a number or string
-    if (typeof route !== 'number' && typeof route !== 'string') {
-        throw 'Route was not of type number or string';
+    } catch (e) {
+        throw e;
     }
+};
 
-    return axios.get(`${baseRoute}directions/${route}`).then((response) => {
-        // Error handling
-        if (response === null || response.data === null) {
-            throw 'No data received from api.';
+const requestRouteDetails = async (routeId) => {
+    try {
+        // Checking to make sure the route is a number or string
+        if (typeof routeId !== 'number' && typeof routeId !== 'string') {
+            throw new Error('Route was not of type number or string');
         }
 
-        if (response.status !== 200) {
-            throw 'Problem with https://svc.metrotransit.org/nextripv2/directions/:directionId';
-        }
+        // Fetching routes
+        const fetchedRoutes = await requestRoutes();
 
-        return response.data;
-    });
-}
-
-function requestStops(route, direction) {
-    // Checking to make sure the route is a number or string
-    if (typeof route !== 'number' && typeof route !== 'string') {
-        throw 'Route was not of type number or string';
-    }
-
-    // Checking to make sure the direction is a number or string
-    if (typeof direction !== 'number' && typeof direction !== 'string') {
-        throw 'Direction was not of type number or string';
-    }
-
-    return axios
-        .get(`${baseRoute}stops/${route}/${direction}`)
-        .then((response) => {
-            // Error handling
-            if (response === null || response.data === null) {
-                throw 'No data received from api.';
-            }
-
-            if (response.status !== 200) {
-                throw 'Problem with https://svc.metrotransit.org/nextripv2/stops/:routeId/:directionId';
-            }
-
-            return response.data;
+        // Looking for the specified route
+        const selectedRoute = await fetchedRoutes.filter((route) => {
+            return routeId === route.route_id;
         });
-}
 
-function requestStopInformation(route, direction, stop) {
-    // Checking to make sure the route is a number or string
-    if (typeof route !== 'number' && typeof route !== 'string') {
-        throw 'Route was not of type number or string';
+        // Checking to make sure we found a hit
+        if (selectedRoute.length <= 0) {
+            throw Error('Bad route id.');
+        } else {
+            return selectedRoute[0];
+        }
+    } catch (e) {
+        throw e;
     }
+};
 
-    // Checking to make sure the direction is a number or string
-    if (typeof direction !== 'number' && typeof direction !== 'string') {
-        throw 'Direction was not of type number or string';
+const requestDirections = async (routeId) => {
+    try {
+        // Checking to make sure the route is a number or string
+        if (typeof routeId !== 'number' && typeof routeId !== 'string') {
+            throw new Error('Route was not of type number or string');
+        }
+
+        const response = await fetch(`${baseRoute}directions/${routeId}`);
+
+        if (response.ok) {
+            return response.json();
+        } else {
+            throw new Error('No data received from api.');
+        }
+    } catch (e) {
+        throw e;
     }
+};
 
-    // Checking to make sure the stop is a string
-    if (typeof direction !== 'string') {
-        throw 'Stop was not of type string';
-    }
+const requestDirectionDetails = async (routeId, directionId) => {
+    try {
+        // Checking to make sure the route is a number or string
+        if (typeof routeId !== 'number' && typeof routeId !== 'string') {
+            throw new Error('Route was not of type number or string');
+        }
 
-    return axios
-        .get(`${baseRoute}${route}/${direction}/${stop}`)
-        .then((response) => {
-            // Error handling
-            if (response === null || response.data === null) {
-                throw 'No data received from api.';
-            }
+        // Checking to make sure the direction is a number or string
+        if (
+            typeof directionId !== 'number' &&
+            typeof directionId !== 'string'
+        ) {
+            throw new Error('Direction was not of type number or string');
+        }
 
-            if (response.status !== 200) {
-                throw 'Problem with https://svc.metrotransit.org/nextripv2/:routeId/:directionId/:stopId';
-            }
+        // Fetching directions
+        const fetchedDirections = await requestDirections(routeId);
 
-            return response.data;
+        const directionIdNumber = parseInt(directionId, 10);
+
+        const selectedDirection = fetchedDirections.filter((direction) => {
+            return directionIdNumber === direction.direction_id;
         });
-}
+
+        // Checking to make sure we found a hit
+        if (selectedDirection.length <= 0) {
+            throw Error('Bad route or direction id.');
+        } else {
+            return selectedDirection[0];
+        }
+    } catch (e) {
+        throw e;
+    }
+};
+
+const requestStops = async (routeId, directionId) => {
+    try {
+        // Checking to make sure the route is a number or string
+        if (typeof routeId !== 'number' && typeof routeId !== 'string') {
+            throw 'Route was not of type number or string';
+        }
+
+        // Checking to make sure the direction is a number or string
+        if (
+            typeof directionId !== 'number' &&
+            typeof directionId !== 'string'
+        ) {
+            throw 'Direction was not of type number or string';
+        }
+
+        const response = await fetch(
+            `${baseRoute}stops/${routeId}/${directionId}`
+        );
+
+        if (response.ok) {
+            return response.json();
+        } else {
+            throw new Error('No data received from api.');
+        }
+    } catch (e) {
+        throw e;
+    }
+};
+
+const requestStopInformation = async (routeId, directionId, stopId) => {
+    try {
+        // Checking to make sure the route is a number or string
+        if (typeof routeId !== 'number' && typeof routeId !== 'string') {
+            throw 'Route was not of type number or string';
+        }
+
+        // Checking to make sure the direction is a number or string
+        if (
+            typeof directionId !== 'number' &&
+            typeof directionId !== 'string'
+        ) {
+            throw 'Direction was not of type number or string';
+        }
+
+        // Checking to make sure the stop is a string
+        if (typeof directionId !== 'string') {
+            throw 'Stop was not of type string';
+        }
+
+        const response = await fetch(
+            `${baseRoute}${routeId}/${directionId}/${stopId}`
+        );
+
+        if (response.ok) {
+            return response.json();
+        } else {
+            throw new Error('No data received from api.');
+        }
+    } catch (e) {
+        throw e;
+    }
+};
 
 export {
     requestRoutes,
     requestDirections,
     requestStops,
     requestStopInformation,
+    requestRouteDetails,
+    requestDirectionDetails,
 };

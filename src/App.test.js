@@ -249,6 +249,11 @@ test('Requesting a good stop id', async () => {
     );
 });
 
+// These might need to have a faked api
+// test('good route but no directions')
+// test('good direction but no stops')
+// test('good stop but no departures')
+
 // TODO random number generator
 // requesting a random route id
 // requesting a random direction id

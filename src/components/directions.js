@@ -6,77 +6,68 @@ import {
     requestDirections,
     requestStops,
     requestStopInformation,
+    requestRouteDetails,
 } from './../api';
 
 export default function Directions() {
     const [transitRoute, setTransitRoute] = React.useState({});
     const [directions, setDirections] = React.useState([]);
     const [badRequest, setBadRequest] = React.useState(false);
+    const [loading, setLoading] = React.useState(true);
     const params = useParams();
 
     useEffect(() => {
-        // Getting the bus route information for better usability
-        requestRoutes()
-            .then((routes) => {
-                const selectedRoute = routes.filter((route) => {
-                    return params.routeId === route.route_id;
-                });
+        const fetchData = async () => {
+            try {
+                const fetchedRouteDetails = await requestRouteDetails(
+                    params.routeId
+                );
+                setTransitRoute(fetchedRouteDetails);
 
-                // Checking to make sure we found a hit
-                if (selectedRoute.length <= 0) {
-                    setBadRequest(true);
-                } else {
-                    setTransitRoute(selectedRoute[0]);
-                }
-            })
-            .catch((e) => {
+                const fetchedDirections = await requestDirections(
+                    params.routeId
+                );
+                setDirections(fetchedDirections);
+            } catch (e) {
                 setBadRequest(true);
-                console.error(e);
-            });
-
-        //
-        requestDirections(params.routeId)
-            .then((directions) => {
-                // debugger
-                console.log('directions', directions);
-                // Storing the directions
-                setDirections(directions);
-            })
-            .catch((e) => {
-                setBadRequest(true);
-                console.error(e);
-            });
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchData();
     }, []);
+
+    // Checking if we are still loading
+    if (loading) {
+        return <h2>Loading</h2>;
+    }
+
+    // Checking if we had a bad request
+    if (badRequest) {
+        return <h2>Bad Request</h2>;
+    }
 
     return (
         <div>
-            {badRequest ? (
-                <h2>Bad Request</h2>
-            ) : (
-                <div>
-                    <h3>Route: {transitRoute.route_label}</h3>
-                    <h2>Directions</h2>
-                    <List>
-                        {directions.length > 0 ? (
-                            directions.map((direction, index) => {
-                                return (
-                                    <li
-                                        key={`${direction.direction_id}-${index}`}
-                                    >
-                                        <Link
-                                            to={`direction/${direction.direction_id}`}
-                                        >
-                                            {direction.direction_name}
-                                        </Link>
-                                    </li>
-                                );
-                            })
-                        ) : (
-                            <li>No directions found for specified route.</li>
-                        )}
-                    </List>
-                </div>
-            )}
+            <h3>Route: {transitRoute.route_label}</h3>
+            <h2>Directions</h2>
+            <List>
+                {directions.length > 0 ? (
+                    directions.map((direction, index) => {
+                        return (
+                            <li key={`${direction.direction_id}-${index}`}>
+                                <Link
+                                    to={`direction/${direction.direction_id}`}
+                                >
+                                    {direction.direction_name}
+                                </Link>
+                            </li>
+                        );
+                    })
+                ) : (
+                    <li>No directions found for specified route.</li>
+                )}
+            </List>
         </div>
     );
 }

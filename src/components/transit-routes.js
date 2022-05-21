@@ -6,46 +6,56 @@ import { requestRoutes } from '../api';
 export default function TransitRoutes() {
     const [routes, setRoutes] = React.useState([]);
     const [badRequest, setBadRequest] = React.useState(false);
+    const [loading, setLoading] = React.useState(true);
+    const [errorMessage, setErrorMessage] = React.useState('');
 
+    // Getting the bus routes
     useEffect(() => {
-        // Getting the bus routes
-        requestRoutes()
-            .then((routes) => {
-                setRoutes(routes);
-            })
-            .catch((e) => {
+        const fetchData = async () => {
+            try {
+                const fetchedRoutes = await requestRoutes();
+                setRoutes(fetchedRoutes);
+            } catch (e) {
                 setBadRequest(true);
-                console.log(e);
-            });
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchData();
     }, []);
+
+    // Checking if we are still loading
+    if (loading) {
+        return <h2>Loading</h2>;
+    }
+
+    // Checking if we had a bad request
+    if (badRequest) {
+        return <h2>Bad Request</h2>;
+    }
 
     return (
         <div>
-            {badRequest ? (
-                <h2>Bad Request</h2>
-            ) : (
-                <div>
-                    <h2>Transit Routes</h2>
-                    <List>
-                        {routes.length > 0 ? (
-                            routes.map((route, index) => {
-                                return (
-                                    <li key={`${route.route_id}-${index}`}>
-                                        <Link
-                                            className="transit-route-link"
-                                            to={`route/${route.route_id}`}
-                                        >
-                                            {route.route_label}
-                                        </Link>
-                                    </li>
-                                );
-                            })
-                        ) : (
-                            <li>No transit routes found.</li>
-                        )}
-                    </List>
-                </div>
-            )}
+            <h2>Transit Routes</h2>
+            <List>
+                {routes.length > 0 ? (
+                    routes.map((route, index) => {
+                        return (
+                            <li key={`${route.route_id}-${index}`}>
+                                <Link
+                                    className="transit-route-link"
+                                    to={`route/${route.route_id}`}
+                                >
+                                    {route.route_label}
+                                </Link>
+                            </li>
+                        );
+                    })
+                ) : (
+                    <li>No transit routes found.</li>
+                )}
+            </List>
         </div>
     );
 }

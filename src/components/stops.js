@@ -6,6 +6,8 @@ import {
     requestDirections,
     requestStops,
     requestStopInformation,
+    requestRouteDetails,
+    requestDirectionDetails,
 } from './../api';
 
 export default function Stops() {
@@ -13,90 +15,67 @@ export default function Stops() {
     const [direction, setDirection] = React.useState({});
     const [stops, setStops] = React.useState([]);
     const [badRequest, setBadRequest] = React.useState(false);
+    const [loading, setLoading] = React.useState(true);
     const params = useParams();
 
     useEffect(() => {
-        // Getting the bus route information
-        requestRoutes()
-            .then((routes) => {
-                const selectedRoute = routes.filter((route) => {
-                    return params.routeId === route.route_id;
-                });
+        const fetchData = async () => {
+            try {
+                const fetchedRouteDetails = await requestRouteDetails(
+                    params.routeId
+                );
+                setTransitRoute(fetchedRouteDetails);
 
-                // Checking to make sure we found a hit
-                if (selectedRoute.length <= 0) {
-                    setBadRequest(true);
-                } else {
-                    setTransitRoute(selectedRoute[0]);
-                }
-            })
-            .catch((e) => {
+                const fetchedDirectionDetails = await requestDirectionDetails(
+                    params.routeId,
+                    params.directionId
+                );
+                setDirection(fetchedDirectionDetails);
+
+                const fetchedStops = await requestStops(
+                    params.routeId,
+                    params.directionId
+                );
+                setStops(fetchedStops);
+            } catch (e) {
                 setBadRequest(true);
-                console.error(e);
-            });
-
-        // Getting the direction name
-        requestDirections(params.routeId)
-            .then((directions) => {
-                const directionIdNumber = parseInt(params.directionId, 10);
-
-                const selectedDirection = directions.filter((direction) => {
-                    return directionIdNumber === direction.direction_id;
-                });
-
-                // Checking to make sure we found a hit
-                if (selectedDirection.length <= 0) {
-                    setBadRequest(true);
-                } else {
-                    setDirection(selectedDirection[0]);
-                }
-            })
-            .catch((e) => {
-                setBadRequest(true);
-                console.error(e);
-            });
-
-        // Getting the stops for the selected route and direction
-        requestStops(params.routeId, params.directionId)
-            .then((stops) => {
-                // Storing the stops
-                setStops(stops);
-            })
-            .catch((e) => {
-                setBadRequest(true);
-                console.error(e);
-            });
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchData();
     }, []);
+
+    // Checking if we are still loading
+    if (loading) {
+        return <h2>Loading</h2>;
+    }
+
+    // Checking if we had a bad request
+    if (badRequest) {
+        return <h2>Bad Request</h2>;
+    }
 
     return (
         <div>
-            {badRequest ? (
-                <h2>Bad Request</h2>
-            ) : (
-                <div>
-                    <h3>Route: {transitRoute.route_label}</h3>
-                    <h3>Direction: {direction.direction_name}</h3>
-                    <h2>Stops</h2>
-                    <List>
-                        {stops.length > 0 ? (
-                            stops.map((stop, index) => {
-                                return (
-                                    <li key={`${stop.place_code}-${index}`}>
-                                        <Link to={`stop/${stop.place_code}`}>
-                                            {stop.description}
-                                        </Link>
-                                    </li>
-                                );
-                            })
-                        ) : (
-                            <li>
-                                No stops found for specified route and
-                                direction.
+            <h3>Route: {transitRoute.route_label}</h3>
+            <h3>Direction: {direction.direction_name}</h3>
+            <h2>Stops</h2>
+            <List>
+                {stops.length > 0 ? (
+                    stops.map((stop, index) => {
+                        return (
+                            <li key={`${stop.place_code}-${index}`}>
+                                <Link to={`stop/${stop.place_code}`}>
+                                    {stop.description}
+                                </Link>
                             </li>
-                        )}
-                    </List>
-                </div>
-            )}
+                        );
+                    })
+                ) : (
+                    <li>No stops found for specified route and direction.</li>
+                )}
+            </List>
         </div>
     );
 }

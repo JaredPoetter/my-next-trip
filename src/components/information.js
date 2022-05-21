@@ -1,7 +1,9 @@
 import React, { useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import {
+    requestDirectionDetails,
     requestDirections,
+    requestRouteDetails,
     requestRoutes,
     requestStopInformation,
 } from '../api';
@@ -10,107 +12,71 @@ import DepatureList from './departure-list';
 export default function Information() {
     const [transitRoute, setTransitRoute] = React.useState({ route_label: '' });
     const [direction, setDirection] = React.useState({ direction_name: '' });
-    const [information, setInformation] = React.useState({ stops: [] });
+    const [stopInformation, setStopInformation] = React.useState({ stops: [] });
     const [badRequest, setBadRequest] = React.useState(false);
+    const [badRequestMessage, setBadRequestMessage] = React.useState('');
+    const [loading, setLoading] = React.useState(true);
     const params = useParams();
 
     useEffect(() => {
-        // Getting the bus route information for better usability
-        requestRoutes()
-            .then((routes) => {
-                // debugger;
-                const selectedRoute = routes.filter((route) => {
-                    return params.routeId === route.route_id;
-                });
+        const fetchData = async () => {
+            try {
+                const fetchedRouteDetails = await requestRouteDetails(
+                    params.routeId
+                );
+                setTransitRoute(fetchedRouteDetails);
 
-                // Checking to make sure we found a hit
-                if (selectedRoute.length <= 0) {
-                    setBadRequest(true);
-                } else {
-                    setTransitRoute(selectedRoute[0]);
-                }
-            })
-            .catch((e) => {
+                const fetchedDirectionDetails = await requestDirectionDetails(
+                    params.routeId,
+                    params.directionId
+                );
+                setDirection(fetchedDirectionDetails);
+
+                const fetchedStopInformation = await requestStopInformation(
+                    params.routeId,
+                    params.directionId,
+                    params.stopId
+                );
+                setStopInformation(fetchedStopInformation);
+            } catch (e) {
                 setBadRequest(true);
-                console.error(e);
-            });
-
-        //
-        requestDirections(params.routeId)
-            .then((directions) => {
-                const directionIdNumber = parseInt(params.directionId, 10);
-
-                const selectedDirection = directions.filter((direction) => {
-                    return directionIdNumber === direction.direction_id;
-                });
-
-                // Checking to make sure we found a hit
-                if (selectedDirection.length <= 0) {
-                    setBadRequest(true);
-                } else {
-                    setDirection(selectedDirection[0]);
-                }
-            })
-            .catch((e) => {
-                setBadRequest(true);
-                console.error(e);
-            });
-
-        // Getting the stops for the selected route and direction
-        requestStopInformation(
-            params.routeId,
-            params.directionId,
-            params.stopId
-        )
-            .then((information) => {
-                // Storing the information
-                setInformation(information);
-            })
-            .catch((e) => {
-                setBadRequest(true);
-                console.error(e);
-            });
+                setBadRequestMessage(e.message);
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchData();
     }, []);
+
+    // Checking if we are still loading
+    if (loading) {
+        return <h2>Loading</h2>;
+    }
+
+    // Checking if we had a bad request
+    if (badRequest) {
+        return <h2>Bad Request: {badRequestMessage}</h2>;
+    }
+
+    const stopName =
+        stopInformation &&
+        stopInformation.stops &&
+        stopInformation.stops.length > 0
+            ? stopInformation.stops[0].description
+            : '';
 
     return (
         <div>
-            {badRequest ? (
-                <h2>Bad Request</h2>
+            <h3>Route: {transitRoute.route_label}</h3>
+            <h3>Direction: {direction.direction_name}</h3>
+            <h3>Stop: {stopName}</h3>
+            <h2>Information</h2>
+            {stopInformation &&
+            stopInformation.departures &&
+            stopInformation.departures.length > 0 ? (
+                <DepatureList departureData={stopInformation} />
             ) : (
-                <div>
-                    <h3>Route: {transitRoute.route_label}</h3>
-                    <h3>Direction: {direction.direction_name}</h3>
-                    {information &&
-                    information.stops &&
-                    information.stops.length > 0 ? (
-                        <h3>Stop: {information.stops[0].description}</h3>
-                    ) : (
-                        ''
-                    )}
-                    <h2>Information</h2>
-                    {information &&
-                    information.departures &&
-                    information.departures.length > 0 ? (
-                        <DepatureList departureData={information} />
-                    ) : (
-                        ''
-                    )}
-                    {information &&
-                    information.departures &&
-                    information.departures.length === 0 ? (
-                        <h3>No departures at this time.</h3>
-                    ) : (
-                        ''
-                    )}
-                    {information && information.departures ? (
-                        ''
-                    ) : (
-                        <h3>
-                            No information found for specified route, direction
-                            and stop.
-                        </h3>
-                    )}
-                </div>
+                <h3>No departures at this time.</h3>
             )}
         </div>
     );
