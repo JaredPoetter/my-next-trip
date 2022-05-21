@@ -19,7 +19,7 @@ export default function Information() {
     const params = useParams();
 
     useEffect(() => {
-        const fetchData = async () => {
+        (async () => {
             try {
                 const fetchedRouteDetails = await requestRouteDetails(
                     params.routeId
@@ -44,8 +44,7 @@ export default function Information() {
             } finally {
                 setLoading(false);
             }
-        };
-        fetchData();
+        })();
     }, []);
 
     // Checking if we are still loading

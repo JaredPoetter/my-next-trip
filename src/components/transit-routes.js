@@ -11,7 +11,7 @@ export default function TransitRoutes() {
 
     // Getting the bus routes
     useEffect(() => {
-        const fetchData = async () => {
+        (async () => {
             try {
                 const fetchedRoutes = await requestRoutes();
                 setRoutes(fetchedRoutes);
@@ -20,9 +20,7 @@ export default function TransitRoutes() {
             } finally {
                 setLoading(false);
             }
-        };
-
-        fetchData();
+        })();
     }, []);
 
     // Checking if we are still loading
