@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
+import { List } from 'reactstrap';
 import {
     requestRoutes,
     requestDirections,
@@ -76,22 +77,24 @@ export default function Stops() {
                     <h3>Route: {transitRoute.route_label}</h3>
                     <h3>Direction: {direction.direction_name}</h3>
                     <h2>Stops</h2>
-                    {stops.length > 0 ? (
-                        stops.map((stop, index) => {
-                            return (
-                                <div key={`${stop.place_code}-${index}`}>
-                                    <Link to={`stop/${stop.place_code}`}>
-                                        {stop.description}
-                                    </Link>
-                                    <br />
-                                </div>
-                            );
-                        })
-                    ) : (
-                        <h3>
-                            No stops found for specified route and direction.
-                        </h3>
-                    )}
+                    <List>
+                        {stops.length > 0 ? (
+                            stops.map((stop, index) => {
+                                return (
+                                    <li key={`${stop.place_code}-${index}`}>
+                                        <Link to={`stop/${stop.place_code}`}>
+                                            {stop.description}
+                                        </Link>
+                                    </li>
+                                );
+                            })
+                        ) : (
+                            <li>
+                                No stops found for specified route and
+                                direction.
+                            </li>
+                        )}
+                    </List>
                 </div>
             )}
         </div>

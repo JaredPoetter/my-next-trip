@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
+import { List } from 'reactstrap';
 import {
     requestRoutes,
     requestDirections,
@@ -55,22 +56,25 @@ export default function Directions() {
                 <div>
                     <h3>Route: {transitRoute.route_label}</h3>
                     <h2>Directions</h2>
-                    {directions.length > 0 ? (
-                        directions.map((direction, index) => {
-                            return (
-                                <div key={`${direction.direction_id}-${index}`}>
-                                    <Link
-                                        to={`direction/${direction.direction_id}`}
+                    <List>
+                        {directions.length > 0 ? (
+                            directions.map((direction, index) => {
+                                return (
+                                    <li
+                                        key={`${direction.direction_id}-${index}`}
                                     >
-                                        {direction.direction_name}
-                                    </Link>
-                                    <br />
-                                </div>
-                            );
-                        })
-                    ) : (
-                        <h3>No directions found for specified route.</h3>
-                    )}
+                                        <Link
+                                            to={`direction/${direction.direction_id}`}
+                                        >
+                                            {direction.direction_name}
+                                        </Link>
+                                    </li>
+                                );
+                            })
+                        ) : (
+                            <li>No directions found for specified route.</li>
+                        )}
+                    </List>
                 </div>
             )}
         </div>
