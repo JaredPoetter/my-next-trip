@@ -1,3 +1,4 @@
+import { cleanup } from '@testing-library/react';
 import {
     requestDirectionDetails,
     requestDirections,
@@ -6,6 +7,8 @@ import {
     requestStopInformation,
     requestStops,
 } from './api';
+
+afterAll(cleanup);
 
 ///////////////////
 // requestRoutes //
