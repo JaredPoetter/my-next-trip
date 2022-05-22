@@ -1,6 +1,13 @@
 import React, { useEffect } from 'react';
-import { Link, useParams } from 'react-router-dom';
-import { List } from 'reactstrap';
+import { Link, useNavigate, useParams } from 'react-router-dom';
+import {
+    Dropdown,
+    DropdownItem,
+    DropdownMenu,
+    DropdownToggle,
+    List,
+    Spinner,
+} from 'reactstrap';
 import {
     requestRoutes,
     requestDirections,
@@ -14,6 +21,10 @@ export default function Directions() {
     const [directions, setDirections] = React.useState([]);
     const [badRequest, setBadRequest] = React.useState(false);
     const [loading, setLoading] = React.useState(true);
+    const [dropdownOpen, setDropdownOpen] = React.useState(false);
+
+    const toggleDropdown = () => setDropdownOpen((prevState) => !prevState);
+    const navigate = useNavigate();
     const params = useParams();
 
     useEffect(() => {
@@ -38,7 +49,7 @@ export default function Directions() {
 
     // Checking if we are still loading
     if (loading) {
-        return <h2>Loading</h2>;
+        return <Spinner>Loading...</Spinner>;
     }
 
     // Checking if we had a bad request
@@ -50,23 +61,31 @@ export default function Directions() {
         <div>
             <h3>Route: {transitRoute.route_label}</h3>
             <h2>Directions</h2>
-            <List>
-                {directions.length > 0 ? (
-                    directions.map((direction, index) => {
-                        return (
-                            <li key={`${direction.direction_id}-${index}`}>
-                                <Link
-                                    to={`direction/${direction.direction_id}`}
+            <Dropdown isOpen={dropdownOpen} toggle={toggleDropdown}>
+                <DropdownToggle caret>Select Direction</DropdownToggle>
+                <DropdownMenu>
+                    {directions.length > 0 ? (
+                        directions.map((direction, index) => {
+                            return (
+                                <DropdownItem
+                                    key={`${direction.direction_id}-${index}`}
+                                    onClick={() => {
+                                        navigate(
+                                            `direction/${direction.direction_id}`
+                                        );
+                                    }}
                                 >
                                     {direction.direction_name}
-                                </Link>
-                            </li>
-                        );
-                    })
-                ) : (
-                    <li>No directions found for specified route.</li>
-                )}
-            </List>
+                                </DropdownItem>
+                            );
+                        })
+                    ) : (
+                        <DropdownItem>
+                            No directions found for specified route.
+                        </DropdownItem>
+                    )}
+                </DropdownMenu>
+            </Dropdown>
         </div>
     );
 }

@@ -1,6 +1,13 @@
 import React, { useEffect } from 'react';
-import { Link, useParams } from 'react-router-dom';
-import { List } from 'reactstrap';
+import { Link, useNavigate, useParams } from 'react-router-dom';
+import {
+    Dropdown,
+    DropdownItem,
+    DropdownMenu,
+    DropdownToggle,
+    List,
+    Spinner,
+} from 'reactstrap';
 import {
     requestRoutes,
     requestDirections,
@@ -16,6 +23,10 @@ export default function Stops() {
     const [stops, setStops] = React.useState([]);
     const [badRequest, setBadRequest] = React.useState(false);
     const [loading, setLoading] = React.useState(true);
+    const [dropdownOpen, setDropdownOpen] = React.useState(false);
+
+    const toggleDropdown = () => setDropdownOpen((prevState) => !prevState);
+    const navigate = useNavigate();
     const params = useParams();
 
     useEffect(() => {
@@ -47,7 +58,7 @@ export default function Stops() {
 
     // Checking if we are still loading
     if (loading) {
-        return <h2>Loading</h2>;
+        return <Spinner>Loading...</Spinner>;
     }
 
     // Checking if we had a bad request
@@ -60,21 +71,29 @@ export default function Stops() {
             <h3>Route: {transitRoute.route_label}</h3>
             <h3>Direction: {direction.direction_name}</h3>
             <h2>Stops</h2>
-            <List>
-                {stops.length > 0 ? (
-                    stops.map((stop, index) => {
-                        return (
-                            <li key={`${stop.place_code}-${index}`}>
-                                <Link to={`stop/${stop.place_code}`}>
+            <Dropdown isOpen={dropdownOpen} toggle={toggleDropdown}>
+                <DropdownToggle caret>Select Stop</DropdownToggle>
+                <DropdownMenu>
+                    {stops.length > 0 ? (
+                        stops.map((stop, index) => {
+                            return (
+                                <DropdownItem
+                                    key={`${stop.place_code}-${index}`}
+                                    onClick={() =>
+                                        navigate(`stop/${stop.place_code}`)
+                                    }
+                                >
                                     {stop.description}
-                                </Link>
-                            </li>
-                        );
-                    })
-                ) : (
-                    <li>No stops found for specified route and direction.</li>
-                )}
-            </List>
+                                </DropdownItem>
+                            );
+                        })
+                    ) : (
+                        <DropdownItem>
+                            No stops found for specified route and direction.
+                        </DropdownItem>
+                    )}
+                </DropdownMenu>
+            </Dropdown>
         </div>
     );
 }

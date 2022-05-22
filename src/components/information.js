@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
+import { Spinner } from 'reactstrap';
 import {
     requestDirectionDetails,
     requestDirections,
@@ -49,7 +50,7 @@ export default function Information() {
 
     // Checking if we are still loading
     if (loading) {
-        return <h2>Loading</h2>;
+        return <Spinner>Loading...</Spinner>;
     }
 
     // Checking if we had a bad request

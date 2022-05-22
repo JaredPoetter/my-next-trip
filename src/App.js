@@ -16,7 +16,7 @@ export default function App() {
     // console.log(params);
 
     // https://reactstrap.github.io/?path=/docs/components-breadcrumb--breadcrumb
-    const pathArray = window.location.pathname.split('/');
+    const pathArray = window.location.pathname.substring(1).split('/');
 
     return (
         <div>
@@ -24,7 +24,7 @@ export default function App() {
 
             {/* <Breadcrumb>
                 {pathArray.map((pathItem, index) => {
-                    if (index % 2 === 1) {
+                    if (index % 2 === 0) {
                         return <BreadcrumbItem>{pathItem}</BreadcrumbItem>;
                     }
                 })}
