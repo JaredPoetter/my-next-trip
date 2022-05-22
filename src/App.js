@@ -19,8 +19,8 @@ export default function App() {
     const pathArray = window.location.pathname.substring(1).split('/');
 
     return (
-        <div>
-            <h1>My NextTrip App</h1>
+        <div className="App">
+            <h1 className="title">My NextTrip App</h1>
 
             {/* <Breadcrumb>
                 {pathArray.map((pathItem, index) => {

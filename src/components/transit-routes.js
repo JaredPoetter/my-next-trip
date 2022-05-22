@@ -1,29 +1,27 @@
-// import { Dropdown } from 'bootstrap';
-// import { Button } from 'bootstrap';
 import React, { useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import {
     Dropdown,
     DropdownItem,
     DropdownMenu,
     DropdownToggle,
-    List,
     Spinner,
 } from 'reactstrap';
 import { requestRoutes } from '../api';
-import 'bootstrap/dist/css/bootstrap.min.css';
 
 export default function TransitRoutes() {
+    // Local state
     const [routes, setRoutes] = React.useState([]);
-    const [badRequest, setBadRequest] = React.useState(false);
     const [loading, setLoading] = React.useState(true);
+    const [badRequest, setBadRequest] = React.useState(false);
     const [errorMessage, setErrorMessage] = React.useState('');
     const [dropdownOpen, setDropdownOpen] = React.useState(false);
 
+    // Helper variables
     const toggleDropdown = () => setDropdownOpen((prevState) => !prevState);
     const navigate = useNavigate();
 
-    // Getting the bus routes
+    // Loading data when the component is mounted
     useEffect(() => {
         (async () => {
             try {
@@ -31,6 +29,7 @@ export default function TransitRoutes() {
                 setRoutes(fetchedRoutes);
             } catch (e) {
                 setBadRequest(true);
+                setErrorMessage(e.message);
             } finally {
                 setLoading(false);
             }
@@ -44,7 +43,7 @@ export default function TransitRoutes() {
 
     // Checking if we had a bad request
     if (badRequest) {
-        return <h2>Bad Request</h2>;
+        return <h2>Bad Request: {errorMessage}</h2>;
     }
 
     return (

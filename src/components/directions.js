@@ -1,32 +1,29 @@
 import React, { useEffect } from 'react';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import {
     Dropdown,
     DropdownItem,
     DropdownMenu,
     DropdownToggle,
-    List,
     Spinner,
 } from 'reactstrap';
-import {
-    requestRoutes,
-    requestDirections,
-    requestStops,
-    requestStopInformation,
-    requestRouteDetails,
-} from './../api';
+import { requestDirections, requestRouteDetails } from './../api';
 
 export default function Directions() {
+    // Local state
     const [transitRoute, setTransitRoute] = React.useState({});
     const [directions, setDirections] = React.useState([]);
     const [badRequest, setBadRequest] = React.useState(false);
+    const [errorMessage, setErrorMessage] = React.useState('');
     const [loading, setLoading] = React.useState(true);
     const [dropdownOpen, setDropdownOpen] = React.useState(false);
 
+    // Helper variables
     const toggleDropdown = () => setDropdownOpen((prevState) => !prevState);
     const navigate = useNavigate();
     const params = useParams();
 
+    // Loading data when the component is mounted
     useEffect(() => {
         (async () => {
             try {
@@ -41,6 +38,7 @@ export default function Directions() {
                 setDirections(fetchedDirections);
             } catch (e) {
                 setBadRequest(true);
+                setErrorMessage(e.message);
             } finally {
                 setLoading(false);
             }
@@ -54,7 +52,7 @@ export default function Directions() {
 
     // Checking if we had a bad request
     if (badRequest) {
-        return <h2>Bad Request</h2>;
+        return <h2>Bad Request: {errorMessage}</h2>;
     }
 
     return (

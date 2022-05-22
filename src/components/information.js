@@ -1,24 +1,26 @@
 import React, { useEffect } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { Spinner } from 'reactstrap';
 import {
     requestDirectionDetails,
-    requestDirections,
     requestRouteDetails,
-    requestRoutes,
     requestStopInformation,
 } from '../api';
-import DepatureList from './departure-list';
+import DepartureList from './departure-list';
 
 export default function Information() {
+    // Local state
     const [transitRoute, setTransitRoute] = React.useState({ route_label: '' });
     const [direction, setDirection] = React.useState({ direction_name: '' });
     const [stopInformation, setStopInformation] = React.useState({ stops: [] });
     const [badRequest, setBadRequest] = React.useState(false);
-    const [badRequestMessage, setBadRequestMessage] = React.useState('');
+    const [errorMessage, setErrorMessage] = React.useState('');
     const [loading, setLoading] = React.useState(true);
+
+    // Helper variables
     const params = useParams();
 
+    // Loading data when the component is mounted
     useEffect(() => {
         (async () => {
             try {
@@ -41,7 +43,7 @@ export default function Information() {
                 setStopInformation(fetchedStopInformation);
             } catch (e) {
                 setBadRequest(true);
-                setBadRequestMessage(e.message);
+                setErrorMessage(e.message);
             } finally {
                 setLoading(false);
             }
@@ -55,9 +57,10 @@ export default function Information() {
 
     // Checking if we had a bad request
     if (badRequest) {
-        return <h2>Bad Request: {badRequestMessage}</h2>;
+        return <h2>Bad Request: {errorMessage}</h2>;
     }
 
+    // Computing the stop name
     const stopName =
         stopInformation &&
         stopInformation.stops &&
@@ -74,7 +77,7 @@ export default function Information() {
             {stopInformation &&
             stopInformation.departures &&
             stopInformation.departures.length > 0 ? (
-                <DepatureList departureData={stopInformation} />
+                <DepartureList departureData={stopInformation} />
             ) : (
                 <h3>No departures at this time.</h3>
             )}

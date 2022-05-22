@@ -1,7 +1,12 @@
 const baseRoute = 'https://svc.metrotransit.org/nextripv2/';
 
+/**
+ * @description Getting the transit routes
+ * @returns {Array} transit routes
+ */
 const requestRoutes = async () => {
     try {
+        // Fetching routes
         const response = await fetch(`${baseRoute}routes`);
 
         if (response.ok) {
@@ -14,6 +19,11 @@ const requestRoutes = async () => {
     }
 };
 
+/**
+ * @description Getting the details for a specific transit route
+ * @param {String | Number} routeId the id of the route to find
+ * @returns {Object} route details
+ */
 const requestRouteDetails = async (routeId) => {
     try {
         // Checking to make sure the route is a number or string
@@ -40,6 +50,11 @@ const requestRouteDetails = async (routeId) => {
     }
 };
 
+/**
+ * @description Getting the directions for a specified route
+ * @param {String | Number} routeId the id for a route
+ * @returns {Array} route directions
+ */
 const requestDirections = async (routeId) => {
     try {
         // Checking to make sure the route is a number or string
@@ -47,6 +62,7 @@ const requestDirections = async (routeId) => {
             throw new Error('Route was not of type number or string.');
         }
 
+        // Fetching directions
         const response = await fetch(`${baseRoute}directions/${routeId}`);
 
         if (response.ok) {
@@ -59,6 +75,12 @@ const requestDirections = async (routeId) => {
     }
 };
 
+/**
+ * @description Getting the details about a specific route direction
+ * @param {String | Number} routeId the id for a route
+ * @param {String | Number} directionId the id for a direction
+ * @returns {Object} direction details
+ */
 const requestDirectionDetails = async (routeId, directionId) => {
     try {
         // Checking to make sure the route is a number or string
@@ -77,10 +99,12 @@ const requestDirectionDetails = async (routeId, directionId) => {
         // Fetching directions
         const fetchedDirections = await requestDirections(routeId);
 
-        const directionIdNumber = parseInt(directionId, 10);
-
+        // Looking for the specified direction
         const selectedDirection = fetchedDirections.filter((direction) => {
-            return directionIdNumber === direction.direction_id;
+            return (
+                parseInt(directionId, 10) ===
+                parseInt(direction.direction_id, 10)
+            );
         });
 
         // Checking to make sure we found a hit
@@ -94,6 +118,12 @@ const requestDirectionDetails = async (routeId, directionId) => {
     }
 };
 
+/**
+ * @description Getting the stops for a specified route and direction
+ * @param {String | Number} routeId the id for a route
+ * @param {String | Number} directionId the id for a direction
+ * @returns {Array} route stops
+ */
 const requestStops = async (routeId, directionId) => {
     try {
         // Checking to make sure the route is a number or string
@@ -109,6 +139,7 @@ const requestStops = async (routeId, directionId) => {
             throw new Error('Direction was not of type number or string.');
         }
 
+        // Fetching stops
         const response = await fetch(
             `${baseRoute}stops/${routeId}/${directionId}`
         );
@@ -123,6 +154,13 @@ const requestStops = async (routeId, directionId) => {
     }
 };
 
+/**
+ * @description Getting the information about a stop for a specified route, direction and stop
+ * @param {String | Number} routeId the id for a route
+ * @param {String | Number} directionId the id for a direction
+ * @param {String} stopId the id for a stop
+ * @returns {Object} information about the stop
+ */
 const requestStopInformation = async (routeId, directionId, stopId) => {
     try {
         // Checking to make sure the route is a number or string
@@ -143,6 +181,7 @@ const requestStopInformation = async (routeId, directionId, stopId) => {
             throw new Error('Stop was not of type string.');
         }
 
+        // Fetching stop information
         const response = await fetch(
             `${baseRoute}${routeId}/${directionId}/${stopId}`
         );
