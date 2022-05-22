@@ -8,6 +8,7 @@ import {
     Spinner,
 } from 'reactstrap';
 import { requestDirections, requestRouteDetails } from './../api';
+import RouteSelection from './route-selection';
 
 export default function Directions() {
     // Local state
@@ -57,7 +58,7 @@ export default function Directions() {
 
     return (
         <div>
-            <h3>Route: {transitRoute.route_label}</h3>
+            <RouteSelection route={transitRoute.route_label} />
             <h2>Directions</h2>
             <Dropdown isOpen={dropdownOpen} toggle={toggleDropdown}>
                 <DropdownToggle caret>Select Direction</DropdownToggle>

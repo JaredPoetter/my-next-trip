@@ -7,6 +7,7 @@ import {
     requestStopInformation,
 } from '../api';
 import DepartureList from './departure-list';
+import RouteSelection from './route-selection';
 
 export default function Information() {
     // Local state
@@ -70,9 +71,11 @@ export default function Information() {
 
     return (
         <div>
-            <h3>Route: {transitRoute.route_label}</h3>
-            <h3>Direction: {direction.direction_name}</h3>
-            <h3>Stop: {stopName}</h3>
+            <RouteSelection
+                route={transitRoute.route_label}
+                direction={direction.direction_name}
+                stop={stopName}
+            />
             <h2>Information</h2>
             {stopInformation &&
             stopInformation.departures &&

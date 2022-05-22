@@ -12,6 +12,7 @@ import {
     requestRouteDetails,
     requestDirectionDetails,
 } from './../api';
+import RouteSelection from './route-selection';
 
 export default function Stops() {
     // Local state
@@ -69,8 +70,10 @@ export default function Stops() {
 
     return (
         <div>
-            <h3>Route: {transitRoute.route_label}</h3>
-            <h3>Direction: {direction.direction_name}</h3>
+            <RouteSelection
+                route={transitRoute.route_label}
+                direction={direction.direction_name}
+            />
             <h2>Stops</h2>
             <Dropdown isOpen={dropdownOpen} toggle={toggleDropdown}>
                 <DropdownToggle caret>Select Stop</DropdownToggle>
