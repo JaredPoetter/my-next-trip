@@ -23,9 +23,6 @@ test('requestRoutes: getting the routes', async () => {
     expect(transitRoutes).toEqual(
         expect.arrayContaining(expectedTransitRouteSubset)
     );
-
-    // Checking the number of transit routes returned
-    expect(transitRoutes.length).toEqual(72);
 });
 
 ///////////////////////
