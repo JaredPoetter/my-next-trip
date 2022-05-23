@@ -16,3 +16,7 @@ To run the automated tests run the steps below:
 
 1. `npm install`
 2. `npm test`
+
+## Assumptions
+
+-   I assumed the data coming from the Metro Transit RESTapi would be consistent.
