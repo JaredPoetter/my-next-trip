@@ -1,5 +1,8 @@
 .route-selection {
-    width: 50%;
-    border-width: 2px;
-    border-color: blue;
+    margin-left: 5%;
+    margin-bottom: 30px;
+}
+
+.route-selection-item {
+    margin-bottom: 4px;
 }

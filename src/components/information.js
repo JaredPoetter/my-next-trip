@@ -5,7 +5,7 @@ import {
     requestDirectionDetails,
     requestRouteDetails,
     requestStopInformation,
-} from '../api';
+} from '../api/api';
 import DepartureList from './departure-list';
 import RouteSelection from './route-selection';
 
@@ -14,8 +14,7 @@ export default function Information() {
     const [transitRoute, setTransitRoute] = React.useState({ route_label: '' });
     const [direction, setDirection] = React.useState({ direction_name: '' });
     const [stopInformation, setStopInformation] = React.useState({ stops: [] });
-    const [badRequest, setBadRequest] = React.useState(false);
-    const [errorMessage, setErrorMessage] = React.useState('');
+    const [errorMessage, setErrorMessage] = React.useState(null);
     const [loading, setLoading] = React.useState(true);
 
     // Helper variables
@@ -43,13 +42,12 @@ export default function Information() {
                 );
                 setStopInformation(fetchedStopInformation);
             } catch (e) {
-                setBadRequest(true);
                 setErrorMessage(e.message);
             } finally {
                 setLoading(false);
             }
         })();
-    }, []);
+    }, [params.routeId, params.directionId, params.stopId]);
 
     // Checking if we are still loading
     if (loading) {
@@ -57,7 +55,7 @@ export default function Information() {
     }
 
     // Checking if we had a bad request
-    if (badRequest) {
+    if (errorMessage) {
         return <h2>Bad Request: {errorMessage}</h2>;
     }
 
@@ -76,7 +74,7 @@ export default function Information() {
                 direction={direction.direction_name}
                 stop={stopName}
             />
-            <h2>Information</h2>
+            <h2 className="">Information</h2>
             {stopInformation &&
             stopInformation.departures &&
             stopInformation.departures.length > 0 ? (

@@ -7,15 +7,14 @@ import {
     DropdownToggle,
     Spinner,
 } from 'reactstrap';
-import { requestDirections, requestRouteDetails } from './../api';
+import { requestDirections, requestRouteDetails } from '../api/api';
 import RouteSelection from './route-selection';
 
 export default function Directions() {
     // Local state
     const [transitRoute, setTransitRoute] = React.useState({});
     const [directions, setDirections] = React.useState([]);
-    const [badRequest, setBadRequest] = React.useState(false);
-    const [errorMessage, setErrorMessage] = React.useState('');
+    const [errorMessage, setErrorMessage] = React.useState(null);
     const [loading, setLoading] = React.useState(true);
     const [dropdownOpen, setDropdownOpen] = React.useState(false);
 
@@ -38,13 +37,12 @@ export default function Directions() {
                 );
                 setDirections(fetchedDirections);
             } catch (e) {
-                setBadRequest(true);
                 setErrorMessage(e.message);
             } finally {
                 setLoading(false);
             }
         })();
-    }, []);
+    }, [params.routeId]);
 
     // Checking if we are still loading
     if (loading) {
@@ -52,7 +50,7 @@ export default function Directions() {
     }
 
     // Checking if we had a bad request
-    if (badRequest) {
+    if (errorMessage) {
         return <h2>Bad Request: {errorMessage}</h2>;
     }
 

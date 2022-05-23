@@ -251,6 +251,8 @@ test('Requesting a good direction id', async () => {
             expect(
                 screen.getByText(/Government Plaza Station/i)
             ).toBeInTheDocument();
+            expect(screen.getByText(/38th St Station/i)).toBeInTheDocument();
+            expect(screen.getByText(/46th St Station/i)).toBeInTheDocument();
         },
         { timeout: 2000 }
     );
@@ -280,6 +282,6 @@ test('Requesting a good stop id', async () => {
                 screen.getAllByText(/to Mall of America/i).length
             ).toBeGreaterThan(0);
         },
-        { timeout: 4000 }
+        { timeout: 2000 }
     );
 });

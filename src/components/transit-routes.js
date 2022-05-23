@@ -7,7 +7,7 @@ import {
     DropdownToggle,
     Spinner,
 } from 'reactstrap';
-import { requestRoutes } from '../api';
+import { requestRoutes } from '../api/api';
 
 export default function TransitRoutes() {
     // Local state

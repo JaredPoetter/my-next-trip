@@ -4,7 +4,7 @@ import './departure-list.css';
 
 export default function DepartureList(props) {
     return (
-        <Table bordered striped>
+        <Table className="departure-list-table" bordered striped>
             <thead>
                 <tr>
                     <th>Route</th>

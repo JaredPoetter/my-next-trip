@@ -11,7 +11,7 @@ import {
     requestStops,
     requestRouteDetails,
     requestDirectionDetails,
-} from './../api';
+} from '../api/api';
 import RouteSelection from './route-selection';
 
 export default function Stops() {
@@ -19,8 +19,7 @@ export default function Stops() {
     const [transitRoute, setTransitRoute] = React.useState({});
     const [direction, setDirection] = React.useState({});
     const [stops, setStops] = React.useState([]);
-    const [badRequest, setBadRequest] = React.useState(false);
-    const [errorMessage, setErrorMessage] = React.useState('');
+    const [errorMessage, setErrorMessage] = React.useState(null);
     const [loading, setLoading] = React.useState(true);
     const [dropdownOpen, setDropdownOpen] = React.useState(false);
 
@@ -50,13 +49,12 @@ export default function Stops() {
                 );
                 setStops(fetchedStops);
             } catch (e) {
-                setBadRequest(true);
                 setErrorMessage(e.message);
             } finally {
                 setLoading(false);
             }
         })();
-    }, []);
+    }, [params.routeId, params.directionId, params.stopId]);
 
     // Checking if we are still loading
     if (loading) {
@@ -64,7 +62,7 @@ export default function Stops() {
     }
 
     // Checking if we had a bad request
-    if (badRequest) {
+    if (errorMessage) {
         return <h2>Bad Request: {errorMessage}</h2>;
     }
 
