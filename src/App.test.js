@@ -1,17 +1,8 @@
-import {
-    cleanup,
-    findByText,
-    fireEvent,
-    getByText,
-    render,
-    screen,
-    waitFor,
-} from '@testing-library/react';
+import { cleanup, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { createBrowserHistory, createMemoryHistory } from 'history';
+import { createMemoryHistory } from 'history';
 import { BrowserRouter, Router } from 'react-router-dom';
 import App from './App';
-import uuid from 'uuid';
 import crypto from 'crypto';
 
 afterAll(cleanup);
@@ -42,6 +33,11 @@ test('Full app navigating', async () => {
             expect(
                 screen.getByText(/Route: METRO Blue Line/i)
             ).toBeInTheDocument();
+        },
+        { timeout: 2000 }
+    );
+    await waitFor(
+        () => {
             expect(screen.getByText(/Northbound/i)).toBeInTheDocument();
         },
         { timeout: 2000 }
@@ -57,9 +53,19 @@ test('Full app navigating', async () => {
             expect(
                 screen.getByText(/Route: METRO Blue Line/i)
             ).toBeInTheDocument();
+        },
+        { timeout: 2000 }
+    );
+    await waitFor(
+        () => {
             expect(
                 screen.getByText(/Direction: Northbound/i)
             ).toBeInTheDocument();
+        },
+        { timeout: 2000 }
+    );
+    await waitFor(
+        () => {
             expect(
                 screen.getByText(/Mall of America Station/i)
             ).toBeInTheDocument();
@@ -77,12 +83,27 @@ test('Full app navigating', async () => {
             expect(
                 screen.getByText(/Route: METRO Blue Line/i)
             ).toBeInTheDocument();
+        },
+        { timeout: 2000 }
+    );
+    await waitFor(
+        () => {
             expect(
                 screen.getByText(/Direction: Northbound/i)
             ).toBeInTheDocument();
+        },
+        { timeout: 2000 }
+    );
+    await waitFor(
+        () => {
             expect(
                 screen.getByText(/Stop: MOA Transit Station/i)
             ).toBeInTheDocument();
+        },
+        { timeout: 2000 }
+    );
+    await waitFor(
+        () => {
             expect(screen.getByText(/Information/i)).toBeInTheDocument();
         },
         { timeout: 2000 }
@@ -97,9 +118,19 @@ test('Full app navigating', async () => {
             expect(
                 screen.getByText(/Route: METRO Blue Line/i)
             ).toBeInTheDocument();
+        },
+        { timeout: 2000 }
+    );
+    await waitFor(
+        () => {
             expect(
                 screen.getByText(/Direction: Northbound/i)
             ).toBeInTheDocument();
+        },
+        { timeout: 2000 }
+    );
+    await waitFor(
+        () => {
             expect(
                 screen.getByText(/Mall of America Station/i)
             ).toBeInTheDocument();
@@ -116,12 +147,27 @@ test('Full app navigating', async () => {
             expect(
                 screen.getByText(/Route: METRO Blue Line/i)
             ).toBeInTheDocument();
+        },
+        { timeout: 2000 }
+    );
+    await waitFor(
+        () => {
             expect(
                 screen.getByText(/Direction: Northbound/i)
             ).toBeInTheDocument();
+        },
+        { timeout: 2000 }
+    );
+    await waitFor(
+        () => {
             expect(
                 screen.getByText(/Stop: MOA Transit Station/i)
             ).toBeInTheDocument();
+        },
+        { timeout: 2000 }
+    );
+    await waitFor(
+        () => {
             expect(screen.getByText(/Information/i)).toBeInTheDocument();
         },
         { timeout: 2000 }
@@ -220,8 +266,23 @@ test('Requesting a good route id', async () => {
     await waitFor(
         () => {
             expect(screen.getByText(/METRO Blue Line/i)).toBeInTheDocument();
+        },
+        { timeout: 2000 }
+    );
+    await waitFor(
+        () => {
             expect(screen.getByText(/Directions/i)).toBeInTheDocument();
+        },
+        { timeout: 2000 }
+    );
+    await waitFor(
+        () => {
             expect(screen.getByText(/Northbound/i)).toBeInTheDocument();
+        },
+        { timeout: 2000 }
+    );
+    await waitFor(
+        () => {
             expect(screen.getByText(/Southbound/i)).toBeInTheDocument();
         },
         { timeout: 2000 }
@@ -243,15 +304,45 @@ test('Requesting a good direction id', async () => {
     await waitFor(
         () => {
             expect(screen.getByText(/METRO Blue Line/i)).toBeInTheDocument();
+        },
+        { timeout: 2000 }
+    );
+    await waitFor(
+        () => {
             expect(screen.getByText(/Southbound/i)).toBeInTheDocument();
+        },
+        { timeout: 2000 }
+    );
+    await waitFor(
+        () => {
             expect(screen.getByText(/Stops/i)).toBeInTheDocument();
+        },
+        { timeout: 2000 }
+    );
+    await waitFor(
+        () => {
             expect(
                 screen.getByText(/Target Field Station Platform 2/i)
             ).toBeInTheDocument();
+        },
+        { timeout: 2000 }
+    );
+    await waitFor(
+        () => {
             expect(
                 screen.getByText(/Government Plaza Station/i)
             ).toBeInTheDocument();
+        },
+        { timeout: 2000 }
+    );
+    await waitFor(
+        () => {
             expect(screen.getByText(/38th St Station/i)).toBeInTheDocument();
+        },
+        { timeout: 2000 }
+    );
+    await waitFor(
+        () => {
             expect(screen.getByText(/46th St Station/i)).toBeInTheDocument();
         },
         { timeout: 2000 }
@@ -273,11 +364,31 @@ test('Requesting a good stop id', async () => {
     await waitFor(
         () => {
             expect(screen.getByText(/METRO Blue Line/i)).toBeInTheDocument();
+        },
+        { timeout: 2000 }
+    );
+    await waitFor(
+        () => {
             expect(screen.getByText(/Southbound/i)).toBeInTheDocument();
+        },
+        { timeout: 2000 }
+    );
+    await waitFor(
+        () => {
             expect(
                 screen.getByText(/VA Medical Center Station/i)
             ).toBeInTheDocument();
+        },
+        { timeout: 2000 }
+    );
+    await waitFor(
+        () => {
             expect(screen.getByText(/Information/i)).toBeInTheDocument();
+        },
+        { timeout: 2000 }
+    );
+    await waitFor(
+        () => {
             expect(
                 screen.getAllByText(/to Mall of America/i).length
             ).toBeGreaterThan(0);

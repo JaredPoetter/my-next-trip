@@ -13,8 +13,7 @@ export default function TransitRoutes() {
     // Local state
     const [routes, setRoutes] = React.useState([]);
     const [loading, setLoading] = React.useState(true);
-    const [badRequest, setBadRequest] = React.useState(false);
-    const [errorMessage, setErrorMessage] = React.useState('');
+    const [errorMessage, setErrorMessage] = React.useState(null);
     const [dropdownOpen, setDropdownOpen] = React.useState(false);
 
     // Helper variables
@@ -28,7 +27,6 @@ export default function TransitRoutes() {
                 const fetchedRoutes = await requestRoutes();
                 setRoutes(fetchedRoutes);
             } catch (e) {
-                setBadRequest(true);
                 setErrorMessage(e.message);
             } finally {
                 setLoading(false);
@@ -42,7 +40,7 @@ export default function TransitRoutes() {
     }
 
     // Checking if we had a bad request
-    if (badRequest) {
+    if (errorMessage) {
         return <h2>Bad Request: {errorMessage}</h2>;
     }
 

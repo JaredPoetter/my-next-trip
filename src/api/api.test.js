@@ -46,28 +46,26 @@ test('requestDirections: getting the directions with a good route id', async () 
 
 test('requestDirections: getting the directions with a bad route id', async () => {
     const routeId = 9999999;
+    let error;
 
     try {
         await requestDirections(routeId);
-
-        // Catching if the code above does not throw an error
-        expect(true).toBe(false);
     } catch (e) {
-        expect(e.message).toBe('No data received from api.');
+        error = e;
     }
+    expect(error).toEqual(new Error('No data received from api.'));
 });
 
 test('requestDirections: getting the directions with a wrong type for route id', async () => {
     const routeId = [1, 2, 3];
+    let error;
 
     try {
         await requestDirections(routeId);
-
-        // Catching if the code above does not throw an error
-        expect(true).toBe(false);
     } catch (e) {
-        expect(e.message).toBe('Route was not of type number or string.');
+        error = e;
     }
+    expect(error).toEqual(new Error('Route was not of type number or string.'));
 });
 
 //////////////////
@@ -121,43 +119,42 @@ test('requestStops: getting the stops with a good route id and direction id', as
 test('requestStops: getting the stops with a bad route id and direction id', async () => {
     const routeId = 999999;
     const directionId = 999999;
+    let error;
 
     try {
         await requestStops(routeId, directionId);
-
-        // Catching if the code above does not throw an error
-        expect(true).toBe(false);
     } catch (e) {
-        expect(e.message).toBe('No data received from api.');
+        error = e;
     }
+    expect(error).toEqual(new Error('No data received from api.'));
 });
 
 test('requestStops: getting the stops with a wrong type for route id', async () => {
     const routeId = [1, 2, 3];
     const directionId = 999999;
+    let error;
 
     try {
         await requestStops(routeId, directionId);
-
-        // Catching if the code above does not throw an error
-        expect(true).toBe(false);
     } catch (e) {
-        expect(e.message).toBe('Route was not of type number or string.');
+        error = e;
     }
+    expect(error).toEqual(new Error('Route was not of type number or string.'));
 });
 
 test('requestStops: getting the stops with a wrong type for direction id', async () => {
     const routeId = 999999;
     const directionId = [1, 2, 3];
+    let error;
 
     try {
         await requestStops(routeId, directionId);
-
-        // Catching if the code above does not throw an error
-        expect(true).toBe(false);
     } catch (e) {
-        expect(e.message).toBe('Direction was not of type number or string.');
+        error = e;
     }
+    expect(error).toEqual(
+        new Error('Direction was not of type number or string.')
+    );
 });
 
 ////////////////////////////
@@ -184,60 +181,58 @@ test('requestStopInformation: getting the stops information with a bad route id 
     const routeId = 999999;
     const directionId = 111111;
     const stopId = 'abcdefg';
+    let error;
 
     try {
         await requestStopInformation(routeId, directionId, stopId);
-
-        // Catching if the code above does not throw an error
-        expect(true).toBe(false);
     } catch (e) {
-        expect(e.message).toBe('No data received from api.');
+        error = e;
     }
+    expect(error).toEqual(new Error('No data received from api.'));
 });
 
 test('requestStopInformation: getting the stops information with a wrong type for route id', async () => {
     const routeId = [1, 2, 3];
     const directionId = 111111;
     const stopId = 'abcdefg';
+    let error;
 
     try {
         await requestStopInformation(routeId, directionId, stopId);
-
-        // Catching if the code above does not throw an error
-        expect(true).toBe(false);
     } catch (e) {
-        expect(e.message).toBe('Route was not of type number or string.');
+        error = e;
     }
+    expect(error).toEqual(new Error('Route was not of type number or string.'));
 });
 
 test('requestStopInformation: getting the stops information with a wrong type for direction id', async () => {
     const routeId = 999999;
     const directionId = [1, 2, 3];
     const stopId = 'abcdefg';
+    let error;
 
     try {
         await requestStopInformation(routeId, directionId, stopId);
-
-        // Catching if the code above does not throw an error
-        expect(true).toBe(false);
     } catch (e) {
-        expect(e.message).toBe('Direction was not of type number or string.');
+        error = e;
     }
+    expect(error).toEqual(
+        new Error('Direction was not of type number or string.')
+    );
 });
 
 test('requestStopInformation: getting the stops information with a wrong type for stop id', async () => {
     const routeId = 999999;
     const directionId = 111111;
     const stopId = [1, 2, 3];
+    let error;
 
     try {
         await requestStopInformation(routeId, directionId, stopId);
-
-        // Catching if the code above does not throw an error
-        expect(true).toBe(false);
     } catch (e) {
-        expect(e.message).toBe('Stop was not of type string.');
+        error = e;
     }
+    expect(error).toEqual(new Error('Stop was not of type string.'));
 });
 
 /////////////////////////
@@ -260,28 +255,26 @@ test('requestRouteDetails: getting the route details with a good route id', asyn
 
 test('requestRouteDetails: getting the route details with a bad route id', async () => {
     const routeId = 222222;
+    let error;
 
     try {
         await requestRouteDetails(routeId);
-
-        // Catching if the code above does not throw an error
-        expect(true).toBe(false);
     } catch (e) {
-        expect(e.message).toBe('Bad route id.');
+        error = e;
     }
+    expect(error).toEqual(new Error('Bad route id.'));
 });
 
 test('requestRouteDetails: getting the route details with a wrong type for route id', async () => {
     const routeId = [1, 2, 3];
+    let error;
 
     try {
         await requestRouteDetails(routeId);
-
-        // Catching if the code above does not throw an error
-        expect(true).toBe(false);
     } catch (e) {
-        expect(e.message).toBe('Route was not of type number or string.');
+        error = e;
     }
+    expect(error).toEqual(new Error('Route was not of type number or string.'));
 });
 
 /////////////////////////////
@@ -308,55 +301,53 @@ test('requestDirectionDetails: getting the direction details with a good route i
 test('requestDirectionDetails: getting the direction details with a good route id and bad direction id', async () => {
     const routeId = 901;
     const directionId = 222222;
+    let error;
 
     try {
         await requestDirectionDetails(routeId, directionId);
-
-        // Catching if the code above does not throw an error
-        expect(true).toBe(false);
     } catch (e) {
-        expect(e.message).toBe('Bad route or direction id.');
+        error = e;
     }
+    expect(error).toEqual(new Error('Bad route or direction id.'));
 });
 
 test('requestDirectionDetails: getting the direction details with a bad route id and direction id', async () => {
     const routeId = 111111;
     const directionId = 222222;
+    let error;
 
     try {
         await requestDirectionDetails(routeId, directionId);
-
-        // Catching if the code above does not throw an error
-        expect(true).toBe(false);
     } catch (e) {
-        expect(e.message).toBe('No data received from api.');
+        error = e;
     }
+    expect(error).toEqual(new Error('No data received from api.'));
 });
 
 test('requestDirectionDetails: getting the direction details with a wrong type for route id', async () => {
     const routeId = [1, 2, 3];
     const directionId = 0;
+    let error;
 
     try {
         await requestDirectionDetails(routeId, directionId);
-
-        // Catching if the code above does not throw an error
-        expect(true).toBe(false);
     } catch (e) {
-        expect(e.message).toBe('Route was not of type number or string.');
+        error = e;
     }
+    expect(error).toEqual(new Error('Route was not of type number or string.'));
 });
 
 test('requestDirectionDetails: getting the direction details with a wrong type for direction id', async () => {
     const routeId = 901;
     const directionId = [1, 2, 3];
+    let error;
 
     try {
         await requestDirectionDetails(routeId, directionId);
-
-        // Catching if the code above does not throw an error
-        expect(true).toBe(false);
     } catch (e) {
-        expect(e.message).toBe('Direction was not of type number or string.');
+        error = e;
     }
+    expect(error).toEqual(
+        new Error('Direction was not of type number or string.')
+    );
 });
