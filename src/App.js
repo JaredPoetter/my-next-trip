@@ -1,6 +1,3 @@
-import './App.css';
-import 'bootstrap/dist/css/bootstrap.min.css';
-
 import React from 'react';
 import { Route, Routes } from 'react-router-dom';
 import TransitRoutes from './components/transit-routes';
@@ -8,6 +5,9 @@ import Directions from './components/directions';
 import Stops from './components/stops';
 import Information from './components/information';
 import BadRequest from './components/bad-request';
+
+import './App.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 export default function App() {
     return (
