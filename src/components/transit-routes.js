@@ -1,23 +1,16 @@
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import {
-    Dropdown,
-    DropdownItem,
-    DropdownMenu,
-    DropdownToggle,
-    Spinner,
-} from 'reactstrap';
+import { Spinner } from 'reactstrap';
 import { requestRoutes } from '../api/api';
+import DropDown from './dropdown';
 
 export default function TransitRoutes() {
     // Local state
     const [routes, setRoutes] = React.useState([]);
     const [loading, setLoading] = React.useState(true);
     const [errorMessage, setErrorMessage] = React.useState(null);
-    const [dropdownOpen, setDropdownOpen] = React.useState(false);
 
     // Helper variables
-    const toggleDropdown = () => setDropdownOpen((prevState) => !prevState);
     const navigate = useNavigate();
 
     // Loading data when the component is mounted
@@ -47,27 +40,17 @@ export default function TransitRoutes() {
     return (
         <div>
             <h2>Transit Routes</h2>
-            <Dropdown isOpen={dropdownOpen} toggle={toggleDropdown}>
-                <DropdownToggle caret>Select Route</DropdownToggle>
-                <DropdownMenu>
-                    {routes.length > 0 ? (
-                        routes.map((route, index) => {
-                            return (
-                                <DropdownItem
-                                    key={`${route.route_id}-${index}`}
-                                    onClick={() =>
-                                        navigate(`route/${route.route_id}`)
-                                    }
-                                >
-                                    {route.route_label}
-                                </DropdownItem>
-                            );
-                        })
-                    ) : (
-                        <DropdownItem>No transit routes found.</DropdownItem>
-                    )}
-                </DropdownMenu>
-            </Dropdown>
+            {routes.length > 0 ? (
+                <DropDown
+                    defaultOption={'Select Route'}
+                    optionArray={routes}
+                    labelKey="route_label"
+                    idKey="route_id"
+                    onSelect={(routeId) => navigate(`route/${routeId}`)}
+                />
+            ) : (
+                <h3>No routes found.</h3>
+            )}
         </div>
     );
 }

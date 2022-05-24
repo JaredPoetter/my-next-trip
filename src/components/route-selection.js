@@ -1,4 +1,6 @@
 import React from 'react';
+import PropTypes from 'prop-types';
+
 import './route-selection.css';
 
 export default function RouteSelection(props) {
@@ -25,3 +27,9 @@ export default function RouteSelection(props) {
         </div>
     );
 }
+
+RouteSelection.propTypes = {
+    route: PropTypes.string,
+    direction: PropTypes.string,
+    stop: PropTypes.string,
+};

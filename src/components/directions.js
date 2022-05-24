@@ -1,13 +1,8 @@
 import React, { useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import {
-    Dropdown,
-    DropdownItem,
-    DropdownMenu,
-    DropdownToggle,
-    Spinner,
-} from 'reactstrap';
+import { Spinner } from 'reactstrap';
 import { requestDirections, requestRouteDetails } from '../api/api';
+import DropDown from './dropdown';
 import RouteSelection from './route-selection';
 
 export default function Directions() {
@@ -16,10 +11,8 @@ export default function Directions() {
     const [directions, setDirections] = React.useState([]);
     const [errorMessage, setErrorMessage] = React.useState(null);
     const [loading, setLoading] = React.useState(true);
-    const [dropdownOpen, setDropdownOpen] = React.useState(false);
 
     // Helper variables
-    const toggleDropdown = () => setDropdownOpen((prevState) => !prevState);
     const navigate = useNavigate();
     const params = useParams();
 
@@ -58,31 +51,19 @@ export default function Directions() {
         <div>
             <RouteSelection route={transitRoute.route_label} />
             <h2>Directions</h2>
-            <Dropdown isOpen={dropdownOpen} toggle={toggleDropdown}>
-                <DropdownToggle caret>Select Direction</DropdownToggle>
-                <DropdownMenu>
-                    {directions.length > 0 ? (
-                        directions.map((direction, index) => {
-                            return (
-                                <DropdownItem
-                                    key={`${direction.direction_id}-${index}`}
-                                    onClick={() => {
-                                        navigate(
-                                            `direction/${direction.direction_id}`
-                                        );
-                                    }}
-                                >
-                                    {direction.direction_name}
-                                </DropdownItem>
-                            );
-                        })
-                    ) : (
-                        <DropdownItem>
-                            No directions found for specified route.
-                        </DropdownItem>
-                    )}
-                </DropdownMenu>
-            </Dropdown>
+            {directions.length > 0 ? (
+                <DropDown
+                    defaultOption="Select Direction"
+                    optionArray={directions}
+                    labelKey="direction_name"
+                    idKey="direction_id"
+                    onSelect={(directionId) =>
+                        navigate(`direction/${directionId}`)
+                    }
+                />
+            ) : (
+                <h3>No directions found for specified route.</h3>
+            )}
         </div>
     );
 }

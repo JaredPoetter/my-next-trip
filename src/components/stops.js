@@ -1,17 +1,12 @@
 import React, { useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import {
-    Dropdown,
-    DropdownItem,
-    DropdownMenu,
-    DropdownToggle,
-    Spinner,
-} from 'reactstrap';
+import { Spinner } from 'reactstrap';
 import {
     requestStops,
     requestRouteDetails,
     requestDirectionDetails,
 } from '../api/api';
+import DropDown from './dropdown';
 import RouteSelection from './route-selection';
 
 export default function Stops() {
@@ -21,10 +16,8 @@ export default function Stops() {
     const [stops, setStops] = React.useState([]);
     const [errorMessage, setErrorMessage] = React.useState(null);
     const [loading, setLoading] = React.useState(true);
-    const [dropdownOpen, setDropdownOpen] = React.useState(false);
 
     // Helper variables
-    const toggleDropdown = () => setDropdownOpen((prevState) => !prevState);
     const navigate = useNavigate();
     const params = useParams();
 
@@ -73,29 +66,17 @@ export default function Stops() {
                 direction={direction.direction_name}
             />
             <h2>Stops</h2>
-            <Dropdown isOpen={dropdownOpen} toggle={toggleDropdown}>
-                <DropdownToggle caret>Select Stop</DropdownToggle>
-                <DropdownMenu>
-                    {stops.length > 0 ? (
-                        stops.map((stop, index) => {
-                            return (
-                                <DropdownItem
-                                    key={`${stop.place_code}-${index}`}
-                                    onClick={() =>
-                                        navigate(`stop/${stop.place_code}`)
-                                    }
-                                >
-                                    {stop.description}
-                                </DropdownItem>
-                            );
-                        })
-                    ) : (
-                        <DropdownItem>
-                            No stops found for specified route and direction.
-                        </DropdownItem>
-                    )}
-                </DropdownMenu>
-            </Dropdown>
+            {stops.length > 0 ? (
+                <DropDown
+                    defaultOption="Select Stop"
+                    optionArray={stops}
+                    labelKey="description"
+                    idKey="place_code"
+                    onSelect={(stopId) => navigate(`stop/${stopId}`)}
+                />
+            ) : (
+                <h3>No stops found for specified route and direction.</h3>
+            )}
         </div>
     );
 }

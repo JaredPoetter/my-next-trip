@@ -23,9 +23,8 @@ test('Full app navigating', async () => {
         { timeout: 2000 }
     );
 
-    // Clicking on the METRO Blue Line link
-    await user.click(screen.getByText(/Select Route/i));
-    await user.click(screen.getByText(/METRO Blue Line/i));
+    // Selecting the METRO Blue Line option
+    await user.selectOptions(screen.getByRole('combobox'), 'METRO Blue Line');
 
     // Waiting for the direction data to show from the Metro RESTapi
     await waitFor(
@@ -43,9 +42,8 @@ test('Full app navigating', async () => {
         { timeout: 2000 }
     );
 
-    // Clicking on Northbound
-    await user.click(screen.getByText(/Select Direction/i));
-    await user.click(screen.getByText(/Northbound/i));
+    // Selecting the Northbound option
+    await user.selectOptions(screen.getByRole('combobox'), 'Northbound');
 
     // Waiting for the stop data to show from the Metro RESTapi
     await waitFor(
@@ -73,9 +71,11 @@ test('Full app navigating', async () => {
         { timeout: 2000 }
     );
 
-    // Clicking on Mall of America Station
-    await user.click(screen.getByText(/Select Stop/i));
-    await user.click(screen.getByText(/Mall of America Station/i));
+    // Selecting the Mall of America Station
+    await user.selectOptions(
+        screen.getByRole('combobox'),
+        'Mall of America Station'
+    );
 
     // Waiting for the stop information to show from the Metro RESTapi
     await waitFor(

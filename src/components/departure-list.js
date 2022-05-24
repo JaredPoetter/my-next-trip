@@ -1,5 +1,7 @@
 import React from 'react';
 import { Table } from 'reactstrap';
+import PropTypes from 'prop-types';
+
 import './departure-list.css';
 
 export default function DepartureList(props) {
@@ -26,3 +28,7 @@ export default function DepartureList(props) {
         </Table>
     );
 }
+
+DepartureList.propTypes = {
+    departureData: PropTypes.object,
+};
